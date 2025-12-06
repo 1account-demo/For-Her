@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS STYLES --- */
+        :root {
+            --primary-color: #ff8fa3; /* Soft Pink */
+            --secondary-color: #ffc2d1; /* Peach/Light Pink */
+            --bg-color: #fff0f3; /* Very pale cream/pink */
+            --text-color: #594a4e; /* Warm Grey/Brown */
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow: 0 8px 32px 0 rgba(255, 143, 163, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe3e3 100%);
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated Background Particles */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: #d6336c;
+        }
+
+        .handwriting {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Hero Section */
+        header {
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            opacity: 0; /* For fade in */
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.5);
+        }
+
+        header p {
+            font-size: 1.5rem;
+            color: #886a73;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        /* Special Date Section */
+        .date-section {
+            text-align: center;
+            padding: 40px 20px;
+            margin: 20px auto;
+        }
+
+        .heart-beat {
+            font-size: 4rem;
+            color: #ff4d6d;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+
+        .date-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #c92a2a;
+            margin-top: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Love Notes Grid */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.3);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .card::before {
+            content: '❤️';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 5rem;
+            opacity: 0.05;
+            transform: rotate(20deg);
+        }
+
+        /* Modal (Popup) */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            transform: scale(0.7);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            background-image: linear-gradient(to top, #fff0f3 0%, #fff 100%);
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #d6336c;
+            margin-bottom: 20px;
+        }
+
+        .modal-body {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #495057;
+            margin-bottom: 30px;
+        }
+
+        .close-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 143, 163, 0.4);
+        }
+
+        .close-btn:hover {
+            background: #ff4d6d;
+        }
+
+        /* Surprise Section */
+        .surprise-section {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .surprise-btn {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            letter-spacing: 1px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4);
+        }
+
+        .surprise-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 77, 109, 0.6);
+        }
+
+        #hidden-message {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease-out;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+        }
+
+        #hidden-message.reveal {
+            max-height: 500px;
+            margin-top: 30px;
+            opacity: 1;
+        }
+
+        .hidden-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #ffc2d1;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px 20px;
+            color: #868e96;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1s forwards; /* Delayed fade in */
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.3); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+
+        .floating-heart {
+            position: fixed;
+            color: #ff8fa3;
+            font-size: 20px;
+            animation: floatUp linear forwards;
+            z-index: -1;
+            text-shadow: 0 0 5px rgba(255, 194, 209, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2.5rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="heart-container"></div>
+
+    <header>
+        <h1 class="handwriting">Hi, my love…</h1>
+        <p>This website is only for you. Every feeling here comes straight from my heart.</p>
+    </header>
+
+    <section class="date-section">
+        <div class="heart-beat">❤️</div>
+        <div class="date-text">8 December</div>
+        <p style="margin-top:10px; color:#888;">The day my life changed.</p>
+    </section>
+
+    <section class="container" id="notes-section">
+        <div class="grid">
+            <div class="card" onclick="openModal('My Cutie', 'You are the most adorable person I know. Your smile literally lights up my darkest days. Never forget how cute you are!')">
+                <h3>My Cutie</h3>
+                <p>Click to read...</p>
+            </div>
+
+            <div class="card" onclick="openModal('Meri Rasmalai', 'Sweet, soft, and absolutely irresistible. You are the sweetness in my life that I never want to lose. You are my favorite dessert forever.')">
+                <h3>Meri Rasmalai</h3>
+                <p>Click to read...</p>
+            </div>
+
+            <div class="card" onclick="openModal('My Sweetheart', 'You have the kindest heart. Even when you are feeling down, you care so much. I promise to protect that heart of yours.')">
+                <h3>My Sweetheart</h3>
+                <p>Click to read...</p>
+            </div>
+
+            <div class="card" onclick="openModal('My Love', 'I do not say it enough, but I love you more than words can build. You are my safe space, my home, and my peace.')">
+                <h3>My Love</h3>
+                <p>Click to read...</p>
+            </div>
+
+            <div class="card" onclick="openModal('My Darling', 'Distance or time implies nothing when it comes to us. You are always in my mind, 24/7. My darling, you are truly cherished.')">
+                <h3>My Darling</h3>
+                <p>Click to read...</p>
+            </div>
+
+            <div class="card" onclick="openModal('My Future Partner', 'I do not just see you in my present; I see you in my future. Building a life with you is my biggest dream. We are in this for the long run.')">
+                <h3>My Future Partner</h3>
+                <p>Click to read...</p>
+            </div>
+
+            <div class="card" onclick="openModal('My Everything', 'Without you, everything feels incomplete. You complete my sentences, my days, and my life. You are simply my everything. I did not want to tell you but I cannot wait to cook dinner for you')">
+                <h3>My Everything</h3>
+                <p>Click to read...</p>
+            </div>
+
+             <div class="card" onclick="openModal('My Reassurance', 'I know you get insecure sometimes. But look at this—I made this just for you. No one else matters. My eyes are only on you, always.')">
+                <h3>For Your Heart</h3>
+                <p>Read this when unsure...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="surprise-section">
+        <button class="surprise-btn" onclick="toggleSurprise()">Click for a Surprise</button>
+        <div id="hidden-message">
+            <div class="hidden-content">
+                <h2 class="handwriting" style="color:#d6336c;">Why I Love You</h2>
+                <p style="margin-top: 15px; font-size: 1.1rem; line-height: 1.8;">
+                    I love you not just for who you are, but for who I am when I am with you. <br>
+                    You make me want to be better. You handle my flaws, you laugh at my bad jokes, and you stay. <br>
+                    <strong>Please never doubt us. You are the one.</strong>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>No matter what happens, I will always love you.</p>
+        <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.6;">Forever & Always</p>
+    </footer>
+
+    <div class="modal" id="loveModal" onclick="closeModal(event)">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modalTitle">Title</h2>
+            <p class="modal-body" id="modalBody">Message goes here...</p>
+            <button class="close-btn" onclick="closeModalBtn()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        /* --- JAVASCRIPT LOGIC --- */
+
+        // Modal Logic
+        const modal = document.getElementById('loveModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+
+        function openModal(title, message) {
+            modalTitle.textContent = title;
+            modalBody.textContent = message;
+            modal.classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (event.target === modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function closeModalBtn() {
+            modal.classList.remove('active');
+        }
+
+        // Surprise Button Logic
+        function toggleSurprise() {
+            const message = document.getElementById('hidden-message');
+            message.classList.toggle('reveal');
+        }
+
+        // Floating Hearts Animation Logic
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            heart.innerHTML = '❤️';
+            
+            // Randomize position and animation duration
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4s to 7s
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px'; // Random size
+            
+            document.getElementById('heart-container').appendChild(heart);
+
+            // Remove heart after animation
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
+        }
+
+        // Create a heart every 300ms
+        setInterval(createHeart, 300);
+
+    </script>
+</body>
+</html>
