@@ -140,3 +140,43 @@ body { background: var(--bg-dark); color: var(--text-white); font-family: var(--
     object-fit: cover;        /* Ensures the image doesn't look squished */
     }
 }
+/* --- INSTAGRAM REVEAL BUTTON --- */
+.ig-reveal-container {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 50px; /* Space at bottom */
+    position: relative;
+    z-index: 10;
+}
+
+.ig-reveal-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    /* Instagram Gradient Colors */
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(220, 39, 67, 0.4);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.ig-reveal-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(220, 39, 67, 0.6);
+}
+
+.ig-reveal-btn:active {
+    transform: scale(0.95);
+}
+
+.ig-reveal-btn i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
