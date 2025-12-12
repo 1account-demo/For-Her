@@ -167,7 +167,7 @@ body { background: var(--bg-dark); color: var(--text-white); font-family: var(--
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-.ig-reveal-btn:hover {
+/* .ig-reveal-btn:hover {
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 8px 25px rgba(220, 39, 67, 0.6);
 }
@@ -179,4 +179,4 @@ body { background: var(--bg-dark); color: var(--text-white); font-family: var(--
 .ig-reveal-btn i {
     margin-right: 8px;
     font-size: 1.2rem;
-}
+} */
